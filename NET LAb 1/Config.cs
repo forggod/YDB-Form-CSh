@@ -8,6 +8,6 @@
 
         public static bool IsDebugMode = true;
         public static bool IsWriteKey = false;
-        public static bool IsWriteResponse = true;
+        public static bool IsWriteResponse = false;
     }
 }

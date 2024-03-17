@@ -1,19 +1,23 @@
+using System.Runtime.InteropServices;
+
 namespace NET_LAb_1
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        [DllImport("kernel32.dll")]
+        private static extern bool AllocConsole();
+        [DllImport("kernel32.dll")]
+        private static extern bool FreeConsole();
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            if (Config.IsDebugMode)
+                AllocConsole();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            //Application.Run(new Form1());
+            Application.Run(new MainMenu());
         }
     }
 }
