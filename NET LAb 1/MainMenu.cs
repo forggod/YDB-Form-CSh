@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using NET_LAb_1.Forms;
 
 namespace NET_LAb_1
 {
@@ -26,17 +18,19 @@ namespace NET_LAb_1
         private void button_deliveryNote_Click(object sender, EventArgs e)
         {
             Form formDeliveries = new DataTable("delivery_note");
-            formDeliveries.Show();
+            formDeliveries.ShowDialog(this);
         }
 
         private void button_productReport_Click(object sender, EventArgs e)
         {
-
+            Form report = new ProductsReport();
+            report.ShowDialog(this);
         }
 
         private void button_customerReport_Click(object sender, EventArgs e)
         {
-
+            Form report = new CustomersReport();
+            report.ShowDialog(this);
         }
     }
 }

@@ -6,7 +6,6 @@ using Ydb.Sdk;
 using Ydb.Sdk.Services.Table;
 using NET_LAb_1.Forms;
 using System.Text;
-using Microsoft.Office.Interop.Excel;
 
 namespace NET_LAb_1
 {
@@ -37,7 +36,6 @@ namespace NET_LAb_1
                     dataGridView2.Visible = true;
                     break;
             }
-            ResponseYdbTest(this.table);
         }
         public async Task CreateIamTokenForServiceAccount()
         {
@@ -68,7 +66,6 @@ namespace NET_LAb_1
                 );
                 driver = new Driver(config: config);
                 await driver.Initialize();
-
             }
             catch (Exception ex)
             {
@@ -115,7 +112,6 @@ namespace NET_LAb_1
                     deliveryNotesFillTable();
                     break;
             }
-
         }
         public void customerOrdersFillTable()
         {
@@ -160,6 +156,7 @@ namespace NET_LAb_1
                         row["total"].GetOptionalDouble(),
                         Encoding.UTF8.GetString(row["status"].GetOptionalString())
                         );
+                    Console.WriteLine(row["date_order"].GetOptionalDatetime());
                 }
                 dataGridView1.DataSource = customerOrdersTable;
                 sl = false;
@@ -304,7 +301,7 @@ namespace NET_LAb_1
                     addForm = new DeliveriesForm(Convert.ToUInt64(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()) + 1, "add", iamToken, driver);
                     addForm.FormClosed += (s, e) => updateForm();
                     this.Hide();
-                    addForm.Show();
+                    addForm.ShowDialog(this);
                     break;
             }
         }

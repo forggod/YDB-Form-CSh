@@ -45,7 +45,7 @@
             // 
             // button_addEdit
             // 
-            button_addEdit.Location = new Point(176, 266);
+            button_addEdit.Location = new Point(127, 273);
             button_addEdit.Name = "button_addEdit";
             button_addEdit.Size = new Size(94, 29);
             button_addEdit.TabIndex = 5;
@@ -145,7 +145,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(380, 344);
             Controls.Add(panel1);
             Name = "DeliveriesForm";
             Text = "DeliveriesForm";

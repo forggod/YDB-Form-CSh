@@ -1,15 +1,4 @@
-﻿using NET_LAb_1.Tokens;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Ydb.Sdk.Services.Query;
+﻿using System.Text;
 using Ydb.Sdk.Services.Table;
 using Ydb.Sdk;
 using Ydb.Sdk.Value;
@@ -31,6 +20,16 @@ namespace NET_LAb_1.Forms
             this.mode = mode;
             this.iamtoken = iamtoken;
             this.driver = driver;
+            
+            switch (mode)
+            {
+                case "add":
+                    button_addEdit.Text = "Добавить";
+                    break;
+                case "edit":
+                    button_addEdit.Text = "Изменить";
+                    break;
+            }
             responseYdbProductAndEmployees();
         }
 
@@ -183,3 +182,4 @@ namespace NET_LAb_1.Forms
         }
     }
 }
+// TODO: модальная форма
