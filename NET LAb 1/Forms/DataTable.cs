@@ -16,13 +16,13 @@ namespace NET_LAb_1
         private ExecuteDataQueryResponse queryResponse;
         System.Data.DataTable orderListTable;
         System.Data.DataTable customerOrdersTable;
+        System.Data.DataTable deliveryNoteTable;
         private string table;
         private bool sl = true;
         public DataTable(string table)
         {
             this.table = table;
             InitializeComponent();
-            ToolStripMenuItem_edit.Visible = false;
             switch (table)
             {
                 case "delivery_note":
@@ -36,6 +36,7 @@ namespace NET_LAb_1
                     dataGridView2.Visible = true;
                     break;
             }
+            ResponseYdbTest(table);
         }
         public async Task CreateIamTokenForServiceAccount()
         {
@@ -92,6 +93,19 @@ namespace NET_LAb_1
                             FROM order_list as a LEFT JOIN products as b
                             ON a.id_product = b.id;
                             ;";
+                        break;
+                    case "delivery_note":
+                        query = $@"
+                            SELECT dn.id as id, dn.id_product as id_product, 
+                                dn.id_employee as id_employee, date, quantity, total,
+                                p.name as product, e.name as employee
+                            FROM delivery_note as dn
+                            LEFT JOIN employees as e
+                                ON dn.id_employee = e.id
+                            LEFT JOIN products as p
+                                ON dn.id_product = p.id
+;
+                        ";
                         break;
                 }
 
@@ -174,7 +188,7 @@ namespace NET_LAb_1
         {
             try
             {
-                System.Data.DataTable dataTable = new System.Data.DataTable();
+                deliveryNoteTable = new System.Data.DataTable();
 
                 DataColumn idColumn = new DataColumn("id", typeof(UInt64));
                 idColumn.Unique = true;
@@ -189,37 +203,51 @@ namespace NET_LAb_1
                 idProductColumn.AllowDBNull = false;
                 idProductColumn.ReadOnly = true;
 
-                DataColumn dateColumn = new DataColumn("date", typeof(DateTime));
+                DataColumn productColumn = new DataColumn("Товар", typeof(string));
+                productColumn.AllowDBNull = false;
+                productColumn.ReadOnly = true;
+
+                DataColumn employeeColumn = new DataColumn("Сотрудник", typeof(string));
+                employeeColumn.AllowDBNull = false;
+                employeeColumn.ReadOnly = true;
+
+                DataColumn dateColumn = new DataColumn("Дата", typeof(DateTime));
                 dateColumn.AllowDBNull = false;
                 dateColumn.ReadOnly = true;
 
-                DataColumn quantityolumn = new DataColumn("quantity", typeof(UInt64));
+                DataColumn quantityolumn = new DataColumn("Количество", typeof(UInt64));
                 quantityolumn.AllowDBNull = false;
                 quantityolumn.ReadOnly = true;
 
-                DataColumn totalColumn = new DataColumn("total", typeof(Double));
+                DataColumn totalColumn = new DataColumn("Сумма", typeof(Double));
                 totalColumn.AllowDBNull = false;
                 totalColumn.ReadOnly = true;
-                dataTable.Columns.Add(idColumn);
-                dataTable.Columns.Add(idProductColumn);
-                dataTable.Columns.Add(idEmployeeColumn);
-                dataTable.Columns.Add(dateColumn);
-                dataTable.Columns.Add(quantityolumn);
-                dataTable.Columns.Add(totalColumn);
+                deliveryNoteTable.Columns.Add(idColumn);
+                deliveryNoteTable.Columns.Add(idProductColumn);
+                deliveryNoteTable.Columns.Add(idEmployeeColumn);
+                deliveryNoteTable.Columns.Add(productColumn);
+                deliveryNoteTable.Columns.Add(employeeColumn);
+                deliveryNoteTable.Columns.Add(dateColumn);
+                deliveryNoteTable.Columns.Add(quantityolumn);
+                deliveryNoteTable.Columns.Add(totalColumn);
 
                 Ydb.Sdk.Value.ResultSet resultSet = queryResponse.Result.ResultSets[0];
                 foreach (var row in resultSet.Rows)
                 {
-                    dataTable.Rows.Add(
+                    deliveryNoteTable.Rows.Add(
                         row["id"].GetOptionalUint64(),
                         row["id_product"].GetOptionalUint64(),
                         row["id_employee"].GetOptionalUint64(),
+                        Encoding.UTF8.GetString(row["product"].GetOptionalString()),
+                        Encoding.UTF8.GetString(row["employee"].GetOptionalString()),
                         row["date"].GetOptionalDatetime(),
                         row["quantity"].GetOptionalUint64(),
                         row["total"].GetOptionalDouble()
                         );
                 }
-                dataGridView1.DataSource = dataTable;
+                dataGridView1.DataSource = deliveryNoteTable;
+                dataGridView1.Columns["id_product"].Visible = false;
+                dataGridView1.Columns["id_employee"].Visible = false;
             }
             catch (Exception ex)
             {
@@ -291,9 +319,6 @@ namespace NET_LAb_1
 
         private void ToolStripMenuItem_add_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count == 0)
-                return;
-
             Form addForm;
             switch (this.table)
             {
@@ -308,17 +333,17 @@ namespace NET_LAb_1
 
         private void ToolStripMenuItem_edit_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.Rows.Count == 0)
+            if (dataGridView1.SelectedRows.Count == 0)
                 return;
 
             Form editForm;
             switch (this.table)
             {
                 case "delivery_note":
-                    editForm = new DeliveriesForm(1, "edit", iamToken, driver);
+                    editForm = new DeliveriesForm("edit", iamToken, driver, dataGridView1.SelectedRows[0]);
                     editForm.FormClosed += (s, e) => updateForm();
                     this.Hide();
-                    editForm.Show();
+                    editForm.ShowDialog(this);
                     break;
             }
         }

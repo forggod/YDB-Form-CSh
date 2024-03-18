@@ -67,6 +67,7 @@
             Controls.Add(button1);
             Controls.Add(dataGridView1);
             Name = "CustomersReport";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "CustomersReport";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

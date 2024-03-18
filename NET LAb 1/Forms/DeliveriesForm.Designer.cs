@@ -148,6 +148,7 @@
             ClientSize = new Size(380, 344);
             Controls.Add(panel1);
             Name = "DeliveriesForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "DeliveriesForm";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

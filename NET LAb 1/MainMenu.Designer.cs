@@ -84,6 +84,7 @@
             Controls.Add(button_deliveryNote);
             Controls.Add(button_customersOrders);
             Name = "MainMenu";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "MainMenu";
             ResumeLayout(false);
         }

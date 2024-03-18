@@ -9,7 +9,11 @@ namespace NET_LAb_1.Forms
     {
         ulong id;
         string mode;
-        string iamtoken;
+        ulong id_product;
+        ulong id_employee;
+        DateTime date;
+        ulong quantity;
+        double total;
         Driver driver;
         List<Element> productsList = new List<Element>();
         List<Element> employeesList = new List<Element>();
@@ -18,14 +22,31 @@ namespace NET_LAb_1.Forms
             InitializeComponent();
             this.id = id;
             this.mode = mode;
-            this.iamtoken = iamtoken;
             this.driver = driver;
-            
+
             switch (mode)
             {
                 case "add":
                     button_addEdit.Text = "Добавить";
                     break;
+            }
+            responseYdbProductAndEmployees();
+        }
+
+        public DeliveriesForm(string mode, string iamtoken, Driver driver, DataGridViewRow selectedRow)
+        {
+            InitializeComponent();
+            this.id = Convert.ToUInt64(selectedRow.Cells[0].Value.ToString());
+            this.id_product = Convert.ToUInt64(selectedRow.Cells[1].Value.ToString());
+            this.id_employee = Convert.ToUInt64(selectedRow.Cells[2].Value.ToString());
+            this.date = Convert.ToDateTime(selectedRow.Cells[5].Value.ToString());
+            numericUpDown_quantity.Value = Convert.ToUInt64(selectedRow.Cells[6].Value.ToString());
+            numericUpDown_total.Value = Convert.ToDecimal(selectedRow.Cells[7].Value.ToString());
+            this.mode = mode;
+            this.driver = driver;
+
+            switch (mode)
+            {
                 case "edit":
                     button_addEdit.Text = "Изменить";
                     break;
@@ -52,13 +73,27 @@ namespace NET_LAb_1.Forms
                     if (element.name == comboBox_employee.SelectedItem.ToString())
                         idEmployee = element.id;
 
-                SendResponse(
-                    id,
-                    idProduct,
-                    idEmployee,
-                    DateTime.Now,
-                    Convert.ToUInt64(numericUpDown_quantity.Value),
-                    Convert.ToDouble(numericUpDown_total.Value));
+                switch (mode)
+                {
+                    case "add":
+                        SendResponse(
+                            id,
+                            idProduct,
+                            idEmployee,
+                            DateTime.Now,
+                            Convert.ToUInt64(numericUpDown_quantity.Value),
+                            Convert.ToDouble(numericUpDown_total.Value));
+                        break;
+                    case "edit":
+                        SendResponse(
+                            id,
+                            idProduct,
+                            idEmployee,
+                            date,
+                            Convert.ToUInt64(numericUpDown_quantity.Value),
+                            Convert.ToDouble(numericUpDown_total.Value));
+                        break;
+                }
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
@@ -101,7 +136,7 @@ namespace NET_LAb_1.Forms
                 response.Status.EnsureSuccess();
                 if (response.Status.StatusCode == StatusCode.Success)
                 {
-                    MessageBox.Show("Данные сохранены, накладная сформирована.", "Успех",
+                    MessageBox.Show("Данные сохранены.", "Успех",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
@@ -136,6 +171,10 @@ namespace NET_LAb_1.Forms
                     Element el = new Element((ulong)row["id"].GetOptionalUint64(), Encoding.UTF8.GetString(row["name"].GetOptionalString()));
                     productsList.Add(el);
                     comboBox_product.Items.Add(el.name);
+                    if (mode == "edit" && id_product == el.id)
+                    {
+                        comboBox_product.SelectedIndex = comboBox_product.Items.Count - 1;
+                    }
                 }
 
                 tableClient = new TableClient(driver, new TableClientConfig());
@@ -161,6 +200,10 @@ namespace NET_LAb_1.Forms
                     Element el = new Element((ulong)row["id"].GetOptionalUint64(), Encoding.UTF8.GetString(row["name"].GetOptionalString()));
                     employeesList.Add(el);
                     comboBox_employee.Items.Add(el.name);
+                    if (mode == "edit" && id_employee == el.id)
+                    {
+                        comboBox_employee.SelectedIndex = comboBox_employee.Items.Count - 1;
+                    }
                 }
 
             }
@@ -182,4 +225,3 @@ namespace NET_LAb_1.Forms
         }
     }
 }
-// TODO: модальная форма

@@ -12,7 +12,7 @@ namespace NET_LAb_1
         private void button_customersOrders_Click(object sender, EventArgs e)
         {
             Form formOrders = new DataTable("customer_orders");
-            formOrders.Show();
+            formOrders.ShowDialog(this);
         }
 
         private void button_deliveryNote_Click(object sender, EventArgs e)

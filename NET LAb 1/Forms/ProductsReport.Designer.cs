@@ -90,6 +90,7 @@
             Controls.Add(label_first);
             Controls.Add(dateTimePicker_first);
             Name = "ProductsReport";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "ProductsReport";
             ResumeLayout(false);
             PerformLayout();
