@@ -32,6 +32,7 @@ namespace NET_LAb_1
                 case "customer_orders":
                     ToolStripMenuItem_add.Visible = false;
                     ToolStripMenuItem_edit.Visible = false;
+                    ToolStripMenuItem_delete.Visible = false;
                     ToolStripMenuItem_report.Visible = true;
                     dataGridView2.Visible = true;
                     break;
@@ -323,7 +324,7 @@ namespace NET_LAb_1
             switch (this.table)
             {
                 case "delivery_note":
-                    addForm = new DeliveriesForm(Convert.ToUInt64(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()) + 1, "add", iamToken, driver);
+                    addForm = new DeliveriesForm((uint)dataGridView1.Rows.Count + 1, "add", iamToken, driver);
                     addForm.FormClosed += (s, e) => updateForm();
                     this.Hide();
                     addForm.ShowDialog(this);
@@ -388,6 +389,32 @@ namespace NET_LAb_1
         {
             if (sl && table == "customer_orders")
                 selectorDGV();
+        }
+
+        private void ToolStripMenuItem_delete_Click(object sender, EventArgs e)
+        {
+            ResponseYdbDelete();
+        }
+
+        public async Task ResponseYdbDelete()
+        {
+            if (dataGridView1.SelectedRows.Count == 0) return;
+
+            ulong deleteId = Convert.ToUInt64(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+            await CreateIamTokenForServiceAccount();
+            var tableClient = new TableClient(driver, new TableClientConfig());
+
+            var response = await tableClient.SessionExec(async session =>
+            {
+                var query = @$"DELETE FROM delivery_note WHERE id = {deleteId};";
+                return await session.ExecuteDataQuery(
+                    query: query,
+                    txControl: TxControl.BeginSerializableRW()
+                ); ;
+            });
+            response.Status.EnsureSuccess();
+            queryResponse = (ExecuteDataQueryResponse)response;
+            updateForm();
         }
     }
 }

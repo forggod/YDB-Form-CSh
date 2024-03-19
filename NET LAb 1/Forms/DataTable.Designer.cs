@@ -33,6 +33,7 @@
             ToolStripMenuItem_add = new ToolStripMenuItem();
             ToolStripMenuItem_edit = new ToolStripMenuItem();
             ToolStripMenuItem_report = new ToolStripMenuItem();
+            ToolStripMenuItem_delete = new ToolStripMenuItem();
             dataGridView2 = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
@@ -60,7 +61,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { ToolStripMenuItem_add, ToolStripMenuItem_edit, ToolStripMenuItem_report });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { ToolStripMenuItem_add, ToolStripMenuItem_edit, ToolStripMenuItem_delete, ToolStripMenuItem_report });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(800, 28);
@@ -88,6 +89,13 @@
             ToolStripMenuItem_report.Text = "Отчет";
             ToolStripMenuItem_report.Visible = false;
             ToolStripMenuItem_report.Click += ToolStripMenuItem_report_Click;
+            // 
+            // ToolStripMenuItem_delete
+            // 
+            ToolStripMenuItem_delete.Name = "ToolStripMenuItem_delete";
+            ToolStripMenuItem_delete.Size = new Size(79, 24);
+            ToolStripMenuItem_delete.Text = "Удалить";
+            ToolStripMenuItem_delete.Click += ToolStripMenuItem_delete_Click;
             // 
             // dataGridView2
             // 
@@ -135,5 +143,6 @@
         private ToolStripMenuItem ToolStripMenuItem_edit;
         private ToolStripMenuItem ToolStripMenuItem_report;
         private DataGridView dataGridView2;
+        private ToolStripMenuItem ToolStripMenuItem_delete;
     }
 }

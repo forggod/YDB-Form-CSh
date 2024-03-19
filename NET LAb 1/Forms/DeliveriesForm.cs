@@ -24,12 +24,7 @@ namespace NET_LAb_1.Forms
             this.mode = mode;
             this.driver = driver;
 
-            switch (mode)
-            {
-                case "add":
-                    button_addEdit.Text = "Добавить";
-                    break;
-            }
+            button_addEdit.Text = "Добавить";
             responseYdbProductAndEmployees();
         }
 
@@ -45,12 +40,7 @@ namespace NET_LAb_1.Forms
             this.mode = mode;
             this.driver = driver;
 
-            switch (mode)
-            {
-                case "edit":
-                    button_addEdit.Text = "Изменить";
-                    break;
-            }
+            button_addEdit.Text = "Изменить";
             responseYdbProductAndEmployees();
         }
 
@@ -118,7 +108,6 @@ namespace NET_LAb_1.Forms
                     ( `id`, `date`, `id_employee`, `id_product`, `quantity`, `total` )
                     VALUES ($id, $date, $id_employee, $id_product, $ quantity, $total);
                 ";
-
                     return await session.ExecuteDataQuery(
                         query: query,
                         txControl: TxControl.BeginSerializableRW().Commit(),
@@ -140,7 +129,6 @@ namespace NET_LAb_1.Forms
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
-                // TODO: Создание накладной
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
@@ -171,10 +159,10 @@ namespace NET_LAb_1.Forms
                     Element el = new Element((ulong)row["id"].GetOptionalUint64(), Encoding.UTF8.GetString(row["name"].GetOptionalString()));
                     productsList.Add(el);
                     comboBox_product.Items.Add(el.name);
-                    if (mode == "edit" && id_product == el.id)
-                    {
-                        comboBox_product.SelectedIndex = comboBox_product.Items.Count - 1;
-                    }
+                }
+                if (mode == "edit" && id_product != null)
+                {
+                    comboBox_product.SelectedIndex = comboBox_product.Items.IndexOf(productsList[(int)id_product - 1].name);
                 }
 
                 tableClient = new TableClient(driver, new TableClientConfig());
@@ -200,16 +188,16 @@ namespace NET_LAb_1.Forms
                     Element el = new Element((ulong)row["id"].GetOptionalUint64(), Encoding.UTF8.GetString(row["name"].GetOptionalString()));
                     employeesList.Add(el);
                     comboBox_employee.Items.Add(el.name);
-                    if (mode == "edit" && id_employee == el.id)
-                    {
-                        comboBox_employee.SelectedIndex = comboBox_employee.Items.Count - 1;
-                    }
                 }
 
+                if (mode == "edit" && id_employee != null)
+                {
+                    comboBox_employee.SelectedIndex = comboBox_employee.Items.IndexOf(employeesList[(int)id_employee - 1].name);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.ToString());
             }
         }
     }
