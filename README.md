@@ -13,6 +13,6 @@
 ### Отчет Excel
 ![assets/Excel 1.png](https://github.com/forggod/YDB-Form-CSh/blob/master/assets/Excel%201.png)
 ### Чарт в сервисе Yandex DataLens
-![assets/Chart_delivery.png](https://github.com/forggod/YDB-Form-CSh/blob/master/assets/Chart-Delivery.png)
+![assets/Chart_delivery.png](https://github.com/forggod/YDB-Form-CSh/blob/master/assets/Chart_delivery.png)
 ### Дашборд
 ![assets/Dashboard.png](https://github.com/forggod/YDB-Form-CSh/blob/master/assets/Dashboard.png)
